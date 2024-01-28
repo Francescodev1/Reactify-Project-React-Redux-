@@ -1,29 +1,29 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAlbum, setPlayer } from "../redux/actions";
 
 const Albums = ({ artist }) => {
-  const albums = useSelector((state) => state.album.results);
+  // Accedi allo stato utilizzando il nome dell'artista
+  const albums = useSelector((state) => state.album.albumsByArtist[artist] || []);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchAlbum(artist));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, artist]);
+  }, [dispatch, artist]); // Le dipendenze dell'effetto sono corrette
 
   return (
     <>
       {albums
-        .filter((album, index) => index < 4)
+        .filter((album, index) => index < 4) // Mostra solo i primi 4 album
         .map((album) => (
           <Col
-            className="col text-center mt-3"
+            className="text-center mt-3"
             key={album.id}
             style={{ cursor: "pointer" }}
             onClick={() => dispatch(setPlayer(album))}
           >
-            <img className="img-fluid" src={album.album.cover_medium} alt="track" />
+            <img className="img-fluid" src={album.album.cover_medium} alt={album.title} />
             <p>
               Track: {album.title.length < 16 ? album.title : album.title.substring(0, 16) + "..."}
               <br />

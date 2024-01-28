@@ -37,25 +37,28 @@ const searching = (searchValue) => {
 export const fetchAlbum = (artist) => {
   return async (dispatch) => {
     try {
-      const response = await fetch(baseEndpoint + artist, {
+      const response = await fetch(baseEndpoint + encodeURIComponent(artist), {
         method: "GET",
         headers: {
           "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
-          "X-RapidAPI-Key": "9d408f0366mshab3b0fd8e5ecdf7p1b09f2jsne682a1797fa0",
+          "X-RapidAPI-Key": "YOUR_API_KEY",
         },
       });
       if (response.ok) {
         const data = await response.json();
-        console.log(data.data);
-        dispatch({ type: DEEZER_SET_ALBUM, payload: data.data });
+        dispatch({ 
+          type: DEEZER_SET_ALBUM, 
+          payload: { artist: artist, albums: data.data } 
+        });
       } else {
         throw new Error("Error fetching results");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 };
+
 
 export const setPlayer = (selectedAlbum) => {
   return {
